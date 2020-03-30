@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   height: 800px;
+  width: 800px;
 }
 
 p {
@@ -11,4 +12,24 @@ p {
 .attribute { 
   display: flex;
   justify-content: space-between;
+}
+
+.App {
+  margin: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Margin {
+  margin: 50px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-fields{ 
+  display: flex;
+  flex-direction: column;
 }

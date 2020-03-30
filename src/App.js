@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Tree from 'react-d3-tree';
 
@@ -8,21 +8,21 @@ const myTreeData = {
   name: 'Cornelius Schmidt',
   attributes: {
     'contact date:': new Date().toDateString(),
-    'confirmed case:': 'true',
+    'confirmed case:': 'false',
   },
   children: [
     {
       name: 'Anthony Schmidt',
       attributes: {
         'relation:': 'son',
-        'confirmed case:': 'true',
+        'confirmed case:': 'false',
       },
     },
     {
       name: 'Steffi Schmidt',
       attributes: {
         'relation:': 'daughter',
-        'confirmed case:': 'true',
+        'confirmed case:': 'false',
       },
     },
   ]
@@ -45,9 +45,11 @@ const NodeLabel = (props) => {
 
 const App = () => {
 
-  const [treeState, setTreeState] = useState(myTreeData)
+  const [treeState, setTreeState] = useState(myTreeData);
 
-  const [translate, setTranslate] = useState({x: '100', y: '200'});
+  const [name, setName] = useState('');
+  const [relation, setRelation] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
 
   const styles = {
     links: {
@@ -65,47 +67,61 @@ const App = () => {
     
     dup.children.push(
       {
-        name: 'Karolin Siebert',
+        name: name,
         attributes: {
-          'relation:': 'daughter',
-          'confirmed case:': 'true',
+          'relation:': relation,
+          'confirmed case:': confirmed ? 'true' : 'false',
         }
       }
       )
       
     setTreeState(dup)
   }
-  let treeContainer;
-
-  useEffect(() => {
-    const dimensions = treeContainer.getBoundingClientRect();
-    setTranslate({
-        x: dimensions.width / 2,
-        y: dimensions.height / 2
-    });
-  }, [treeContainer])
   
   return (
-    <div className="App">
-      <div className="map-container" ref={tc => (treeContainer = tc)}> 
-        <Tree
-          styles={styles}
-          data={treeState} 
-          collapsible={false} 
-          translate={translate}
-          separation={{siblings: 2, nonSiblings: 2}}
-          allowForeignObjects
-          onClick={addNode}
-          nodeLabelComponent={{
-          render: <NodeLabel className='info-box' />,
-          foreignObjectWrapper: 
-            { width: 150,
-              height: 300
-            }
-        }} />
+    <div className="Margin">
+      <h2>Tracking Contacts of potential Covid-19 patients</h2>
+      <div className="App">
+        <div className="container" > 
+          <div className="map-container"> 
+            <Tree
+              styles={styles}
+              data={treeState} 
+              collapsible={false} 
+              translate={{x: '100', y: '200'}}
+              separation={{siblings: 2, nonSiblings: 2}}
+              allowForeignObjects
+              nodeLabelComponent={{
+              render: <NodeLabel className='info-box' />,
+              foreignObjectWrapper: 
+                { width: 150,
+                  height: 300
+                }
+            }} />
+          </div>
+          <div className="form-container"> 
+            <h2>Add New Contact</h2>
+            <div></div>
+            <div className="input-fields">
+              <label>Name</label>
+              <input type="text" onChange={e => setName(e.target.value)}></input>
+            </div>
+            <div>
+              <label>Relation</label>
+              <input type="text" onChange={e => setRelation(e.target.value)}></input>
+            </div>
+            <div>
+              <label>Confirmed Case</label>
+              <input 
+                type = "checkbox"
+                id="confirmed"
+                onClick={() => setConfirmed(!confirmed)}c 
+              />
+            </div>
+            <button onClick={addNode}>Add Contact</button>
+          </div>
+        </div>
       </div>
-      <h2>Add New Contact</h2>
-      <button onClick={addNode}>Add Node</button>
     </div>
   );
 }
